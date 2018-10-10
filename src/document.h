@@ -24,7 +24,7 @@
 #include "inkgc/gc-managed.h"
 #include "gc-finalized.h"
 #include "gc-anchored.h"
-#include <glibmm/ustring.h>
+#include "glibmm\glib\glibmm\ustring.h"
 #include <boost/ptr_container/ptr_list.hpp>
 #include <vector>
 #include <set>

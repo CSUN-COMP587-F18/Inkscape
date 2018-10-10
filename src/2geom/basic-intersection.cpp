@@ -350,8 +350,8 @@ static void intersect_polish_root (D2<SBasis> const &A, double &s,
     gsl_multiroot_fsolver_free (sol);
     gsl_vector_free (x);
 #endif
-    // the minor improvements can get in the way and cannot be put away
-    /*{
+    
+    {
     // This code does a neighbourhood search for minor improvements.
     double best_v = L1(A(s) - B(t));
     //std::cout  << "------\n" <<  best_v << std::endl;
@@ -383,7 +383,7 @@ static void intersect_polish_root (D2<SBasis> const &A, double &s,
             best_v = trial_v;
         }
     }
-    }*/
+    }
 }
 
 

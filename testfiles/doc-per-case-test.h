@@ -9,9 +9,11 @@
  * Released under GNU GPL, read the file 'COPYING' for more information
  */
 
-#include "gtest/gtest.h"
+//gtest.h doesn't exist
+//there's download-gtest.sh, but I don't know what it does
+//#include "gtest/gtest.h"
 
-#include "document.h"
+#include "..\src\document.h"
 
 
 /**

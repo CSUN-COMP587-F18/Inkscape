@@ -1,0 +1,21 @@
+There needs to be changes to the project proposal, as some of the listed attributes span a vast amount of other attributes.
+
+Rendering covers pretty much all the functions of the program, so they'll be tested individually.
+Most of the rendering code will be tested with property-based testing by mutation fuzzing.
+There already is a libFuzzer, so it'll be best to start mutation from there.
+While the library fuzzer tests most if not all of the functions by string, there isn't one done on image creation.
+A generation fuzzer will probably do best at viewing possible bugs in the image creation.
+Although there is no purpose to these images, so bugs may be hard to recognize within these images, the patterns may link to possible nuisances.
+I personally have encountered some when using the program, and it is likely that this will help identify them.
+
+Scalability of the imagery is fairly straightforward.
+There isn't any specification of it in the code.
+It may be assumed to be part of the standard, and it is not definitive in a single block of code.
+In other words, I don't think I have the ability to isolate it.
+However, it should be possible to test while testing rendering.
+
+Being able to read files by format looks like an import from a third-party.
+It can be easily tested with some unit testing.
+
+Something that still puzzles me is that there feels like there's some code that isn't viewable without searching for it.
+The library couldn't be found through playing around I had to have a github search for it, so I'm not sure how much I haven't read yet

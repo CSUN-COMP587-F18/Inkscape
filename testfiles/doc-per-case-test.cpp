@@ -13,6 +13,7 @@
 
 #include "inkscape.h"
 
+
 SPDocument *DocPerCaseTest::_doc = 0;
 
 DocPerCaseTest::DocPerCaseTest() :

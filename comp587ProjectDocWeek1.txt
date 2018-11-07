@@ -1,0 +1,13 @@
+To understand inkscape, I have read every bit of documentation within the code.
+I have also been reading any readable code on github because reading different formats without the proper software is frustrating and tedious.
+This has allowed me to understand its functionality better.
+I've also played with it to understand its functions better.
+Ironically reading the code makes it easier than playing with it, though there are a lot of visual aids within the comments.
+Within the code there are things that I need to learn and be familiar with namely SVG and jemalloc and its purpose.
+I most likely need to look up how to create fuzzers to test the SVG code for exception in image creation( there is one in the code).
+I've found what parts I need to be testing to align with my proposal, but the problem is finding them again is a problem.
+
+
+
+
+

@@ -13,6 +13,7 @@
 //there's download-gtest.sh, but I don't know what it does
 //#include "gtest/gtest.h"
 
+//requires libsigc++ library, which is in GNOME
 #include "..\src\document.h"
 
 

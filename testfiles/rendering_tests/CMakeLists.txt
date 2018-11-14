@@ -12,6 +12,8 @@ set(RENDERING_TESTS
     test-rtl-vertical
     selector-important-002
     selector-important-003
+	around-the-world
+	support
 )
 
 

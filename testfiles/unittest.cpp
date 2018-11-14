@@ -8,8 +8,8 @@
  *
  * Released under GNU GPL, read the file 'COPYING' for more information
  */
-
-#include "gtest/gtest.h"
+//gtest.h doesn't exist
+//#include "gtest/gtest.h"
 
 #include <gtkmm.h>
 

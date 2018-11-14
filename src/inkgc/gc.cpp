@@ -9,11 +9,11 @@
  * Released under GNU GPL, read the file 'COPYING' for more information
  */
 
-#include "inkgc/gc-core.h"
+#include "gc-core.h"
 #include <stdexcept>
 #include <cstring>
 #include <string>
-#include <glib.h>
+#include "../xml/glibmm/glib/glibmm.h"
 #include <sigc++/functors/ptr_fun.h>
 #include <glibmm/main.h>
 #include <cstddef>

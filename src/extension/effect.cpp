@@ -53,61 +53,39 @@ Effect::Effect (Inkscape::XML::Node * in_repr, Implementation::Implementation * 
     no_doc = false;
     no_live_preview = false;
 
-    // if we have an XML file
     if (repr != nullptr) {
 
-	// children of "inkscape-extension"
         for (Inkscape::XML::Node *child = repr->firstChild(); child != nullptr; child = child->next()) {
-
-	    // find "effect"
             if (!strcmp(child->name(), INKSCAPE_EXTENSION_NS "effect")) {
-
                 if (child->attribute("needs-document") && !strcmp(child->attribute("needs-document"), "false")) {
                   no_doc = true;
                 }
-
                 if (child->attribute("needs-live-preview") && !strcmp(child->attribute("needs-live-preview"), "false")) {
                   no_live_preview = true;
                 }
-
-		 // children of "effect"
                 for (Inkscape::XML::Node *effect_child = child->firstChild(); effect_child != nullptr; effect_child = effect_child->next()) {
-
                     if (!strcmp(effect_child->name(), INKSCAPE_EXTENSION_NS "effects-menu")) {
-
                         // printf("Found local effects menu in %s\n", this->get_name());
                         local_effects_menu = effect_child->firstChild();
-
                         if (effect_child->attribute("hidden") && !strcmp(effect_child->attribute("hidden"), "true")) {
                             hidden = true;
                         }
-
                     }
-
                     if (!strcmp(effect_child->name(), INKSCAPE_EXTENSION_NS "menu-name") ||
                             !strcmp(effect_child->name(), INKSCAPE_EXTENSION_NS "_menu-name")) {
-
                         // printf("Found local effects menu in %s\n", this->get_name());
                         _verb.set_name(effect_child->firstChild()->content());
                     }
-
                     if (!strcmp(effect_child->name(), INKSCAPE_EXTENSION_NS "menu-tip") ||
                             !strcmp(effect_child->name(), INKSCAPE_EXTENSION_NS "_menu-tip")) {
-
                         // printf("Found local effects menu in %s\n", this->get_name());
                         _verb.set_tip(effect_child->firstChild()->content());
-
                     }
-
-                }
-
+                } // children of "effect"
                 break; // there can only be one effect
-
-            } 
-
-        } 
-
-    }
+            } // find "effect"
+        } // children of "inkscape-extension"
+    } // if we have an XML file
 
     // \TODO this gets called from the Inkscape::Application constructor, where it initializes the menus.
     // But in the constructor, our object isn't quite there yet!

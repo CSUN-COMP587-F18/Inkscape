@@ -195,18 +195,14 @@ unsigned long Crc32::getValue()
 //########################################################################
 
 
-/**
- *
- */
+
 struct Huffman
 {
     int *count;  // number of symbols of each length
     int *symbol; // canonically ordered symbols
 };
 
-/**
- *
- */
+
 class Inflater
 {
 public:
@@ -221,70 +217,48 @@ public:
     static const int MAXCODES  = 316; // max codes lengths to read
     static const int FIXLCODES = 288; // number of fixed literal/length codes
 
-    /**
-     *
-     */
+
     bool inflate(std::vector<unsigned char> &destination,
                  std::vector<unsigned char> &source);
 
 private:
 
-    /**
-     *
-     */
+
     void error(char const *fmt, ...)
     #ifdef G_GNUC_PRINTF
     G_GNUC_PRINTF(2, 3)
     #endif
     ;
 
-    /**
-     *
-     */
+
     void trace(char const *fmt, ...)
     #ifdef G_GNUC_PRINTF
     G_GNUC_PRINTF(2, 3)
     #endif
     ;
 
-    /**
-     *
-     */
+
     void dump();
 
-    /**
-     *
-     */
+
     int buildHuffman(Huffman *h, int *length, int n);
 
-    /**
-     *
-     */
+
     bool getBits(int need, int *oval);
 
-    /**
-     *
-     */
+
     int doDecode(Huffman *h);
 
-    /**
-     *
-     */
+
     bool doCodes(Huffman *lencode, Huffman *distcode);
 
-    /**
-     *
-     */
+
     bool doStored();
 
-    /**
-     *
-     */
+
     bool doFixed();
 
-    /**
-     *
-     */
+
     bool doDynamic();
 
 
@@ -298,9 +272,7 @@ private:
 };
 
 
-/**
- *
- */
+
 Inflater::Inflater() :
     dest(),
     src(),
@@ -310,15 +282,11 @@ Inflater::Inflater() :
 {
 }
 
-/**
- *
- */
+
 Inflater::~Inflater()
 = default;
 
-/**
- *
- */
+
 void Inflater::error(char const *fmt, ...)
 {
     va_list args;
@@ -329,9 +297,7 @@ void Inflater::error(char const *fmt, ...)
     va_end(args);
 }
 
-/**
- *
- */
+
 void Inflater::trace(char const *fmt, ...)
 {
     va_list args;
@@ -343,9 +309,7 @@ void Inflater::trace(char const *fmt, ...)
 }
 
 
-/**
- *
- */
+
 void Inflater::dump()
 {
     for (unsigned int i=0 ; i<dest.size() ; i++)
@@ -354,9 +318,7 @@ void Inflater::dump()
         }
 }
 
-/**
- *
- */
+
 int Inflater::buildHuffman(Huffman *h, int *length, int n)
 {
     // count number of codes of each length
@@ -402,9 +364,6 @@ int Inflater::buildHuffman(Huffman *h, int *length, int n)
 }
 
 
-/**
- *
- */
 bool Inflater::getBits(int requiredBits, int *oval)
 {
     long val = bitBuf;
@@ -430,9 +389,6 @@ bool Inflater::getBits(int requiredBits, int *oval)
 }
 
 
-/**
- *
- */
 int Inflater::doDecode(Huffman *h)
 {
     int bitTmp  = bitBuf;
@@ -479,9 +435,6 @@ int Inflater::doDecode(Huffman *h)
     return -1;
 }
 
-/**
- *
- */
 bool Inflater::doCodes(Huffman *lencode, Huffman *distcode)
 {
     static const int lens[29] = { // Size base for length codes 257..285
@@ -638,8 +591,6 @@ bool Inflater::doFixed()
     return ret;
 }
 
-/**
- */
 bool Inflater::doDynamic()
 {
     //trace("### dynamic ###");
@@ -747,8 +698,7 @@ bool Inflater::doDynamic()
     return retn;
 }
 
-/**
- */
+
 bool Inflater::inflate(std::vector<unsigned char> &destination,
                        std::vector<unsigned char> &source)
 {
@@ -808,39 +758,25 @@ class Deflater
 {
 public:
 
-    /**
-     *
-     */
+
     Deflater();
 
-    /**
-     *
-     */
+
     virtual ~Deflater();
 
-    /**
-     *
-     */
+
     virtual void reset();
 
-    /**
-     *
-     */
+
     virtual bool update(int ch);
 
-    /**
-     *
-     */
+
     virtual bool finish();
 
-    /**
-     *
-     */
+
     virtual std::vector<unsigned char> &getCompressed();
 
-    /**
-     *
-     */
+
     bool deflate(std::vector<unsigned char> &dest,
                  const std::vector<unsigned char> &src);
 
@@ -901,23 +837,17 @@ private:
 //########################################################################
 
 
-/**
- *
- */
+
 Deflater::Deflater()
 {
     reset();
 }
 
-/**
- *
- */
+
 Deflater::~Deflater()
 = default;
 
-/**
- *
- */
+
 void Deflater::reset()
 {
     compressed.clear();
@@ -933,35 +863,27 @@ void Deflater::reset()
     }
 }
 
-/**
- *
- */
+
 bool Deflater::update(int ch)
 {
     uncompressed.push_back((unsigned char)(ch & 0xff));
     return true;
 }
 
-/**
- *
- */
+
 bool Deflater::finish()
 {
     return compress();
 }
 
-/**
- *
- */
+
 std::vector<unsigned char> &Deflater::getCompressed()
 {
     return compressed;
 }
 
 
-/**
- *
- */
+
 bool Deflater::deflate(std::vector<unsigned char> &dest,
                        const std::vector<unsigned char> &src)
 {
@@ -1021,9 +943,7 @@ void Deflater::trace(char const *fmt, ...)
 //#  O U T P U T
 //#############################
 
-/**
- *
- */
+
 void Deflater::put(int ch)
 {
     compressed.push_back(ch);
@@ -1031,9 +951,7 @@ void Deflater::put(int ch)
     outputNrBits = 0;
 }
 
-/**
- *
- */
+
 void Deflater::putWord(int ch)
 {
     int lo = (ch   ) & 0xff;
@@ -1042,9 +960,7 @@ void Deflater::putWord(int ch)
     put(hi);
 }
 
-/**
- *
- */
+
 void Deflater::putFlush()
 {
     if (outputNrBits > 0)
@@ -1055,9 +971,7 @@ void Deflater::putFlush()
     outputNrBits = 0;
 }
 
-/**
- *
- */
+
 void Deflater::putBits(unsigned int ch, unsigned int bitsWanted)
 {
     //trace("n:%4u, %d\n", ch, bitsWanted);
@@ -1089,9 +1003,7 @@ static unsigned int bitReverse(unsigned int code, unsigned int nrBits)
 }
 
 
-/**
- *
- */
+
 void Deflater::putBitsR(unsigned int ch, unsigned int bitsWanted)
 {
     //trace("r:%4u, %d", ch, bitsWanted);
@@ -1378,9 +1290,7 @@ bool Deflater::compressWindow()
 }
 
 
-/**
- *
- */
+
 bool Deflater::compress()
 {
     //trace("compress");
@@ -1463,49 +1373,37 @@ void GzipFile::trace(char const *fmt, ...)
     va_end(args);
 }
 
-/**
- *
- */
+
 void GzipFile::put(unsigned char ch)
 {
     data.push_back(ch);
 }
 
-/**
- *
- */
+
 void GzipFile::setData(const std::vector<unsigned char> &str)
 {
     data = str;
 }
 
-/**
- *
- */
+
 void GzipFile::clearData()
 {
     data.clear();
 }
 
-/**
- *
- */
+
 std::vector<unsigned char> &GzipFile::getData()
 {
     return data;
 }
 
-/**
- *
- */
+
 std::string &GzipFile::getFileName()
 {
     return fileName;
 }
 
-/**
- *
- */
+
 void GzipFile::setFileName(const std::string &val)
 {
     fileName = val;

@@ -37,92 +37,87 @@ using Inkscape::Util::UNIT_TYPE_FONT_HEIGHT;
 namespace
 {
 
-   #define MAKE_UNIT_CODE(a, b) \
-       ((((unsigned)(a) & 0xdf) << 8) | ((unsigned)(b) & 0xdf))
+#define MAKE_UNIT_CODE(a, b) \
+    ((((unsigned)(a) & 0xdf) << 8) | ((unsigned)(b) & 0xdf))
 
-   enum UnitCode {
-       UNIT_CODE_PX = MAKE_UNIT_CODE('p','x'),
-       UNIT_CODE_PT = MAKE_UNIT_CODE('p','t'),
-       UNIT_CODE_PC = MAKE_UNIT_CODE('p','c'),
-       UNIT_CODE_MM = MAKE_UNIT_CODE('m','m'),
-       UNIT_CODE_CM = MAKE_UNIT_CODE('c','m'),
-       UNIT_CODE_IN = MAKE_UNIT_CODE('i','n'),
-       UNIT_CODE_FT = MAKE_UNIT_CODE('f','t'),
-       UNIT_CODE_MT = MAKE_UNIT_CODE('m',' '),
-       UNIT_CODE_EM = MAKE_UNIT_CODE('e','m'),
-       UNIT_CODE_EX = MAKE_UNIT_CODE('e','x'),
-       UNIT_CODE_PERCENT = MAKE_UNIT_CODE('%',0)
-   };
+enum UnitCode {
+    UNIT_CODE_PX = MAKE_UNIT_CODE('p','x'),
+    UNIT_CODE_PT = MAKE_UNIT_CODE('p','t'),
+    UNIT_CODE_PC = MAKE_UNIT_CODE('p','c'),
+    UNIT_CODE_MM = MAKE_UNIT_CODE('m','m'),
+    UNIT_CODE_CM = MAKE_UNIT_CODE('c','m'),
+    UNIT_CODE_IN = MAKE_UNIT_CODE('i','n'),
+    UNIT_CODE_FT = MAKE_UNIT_CODE('f','t'),
+    UNIT_CODE_MT = MAKE_UNIT_CODE('m',' '),
+    UNIT_CODE_EM = MAKE_UNIT_CODE('e','m'),
+    UNIT_CODE_EX = MAKE_UNIT_CODE('e','x'),
+    UNIT_CODE_PERCENT = MAKE_UNIT_CODE('%',0)
+};
 
-   // TODO: convert to constexpr in C++11, so that the above constants can be eliminated
-   inline unsigned make_unit_code(char a, char b) {
-      
-      // this should work without the casts, but let's be 100% sure
-      // also ensure that the codes are in lowercase
-      return MAKE_UNIT_CODE(a,b);
-   }
-
-   inline unsigned make_unit_code(char const *str) {
-      if (!str || str[0] == 0) 
-         return 0;
-       
-      return MAKE_UNIT_CODE(str[0], str[1]);
-   }
+// TODO: convert to constexpr in C++11, so that the above constants can be eliminated
+inline unsigned make_unit_code(char a, char b) {
+    // this should work without the casts, but let's be 100% sure
+    // also ensure that the codes are in lowercase
+    return MAKE_UNIT_CODE(a,b);
+}
+inline unsigned make_unit_code(char const *str) {
+    if (!str || str[0] == 0) return 0;
+    return MAKE_UNIT_CODE(str[0], str[1]);
+}
 
 
 
-   unsigned const svg_length_lookup[] = {
-       0,
-       UNIT_CODE_PX,
-       UNIT_CODE_PT,
-       UNIT_CODE_PC,
-       UNIT_CODE_MM,
-       UNIT_CODE_CM,
-       UNIT_CODE_IN,
-       UNIT_CODE_FT,
-       UNIT_CODE_MT,
-       UNIT_CODE_EM,
-       UNIT_CODE_EX,
-       UNIT_CODE_PERCENT
-      };
-   
-   
-   
-   // maps unit codes obtained from their abbreviations to their SVGLength unit indexes
-   typedef INK_UNORDERED_MAP<unsigned, SVGLength::Unit> UnitCodeLookup;
-   
-   UnitCodeLookup make_unit_code_lookup()
-   {
-       UnitCodeLookup umap;
-       for (unsigned i = 1; i < G_N_ELEMENTS(svg_length_lookup); ++i) {
-           umap[svg_length_lookup[i]] = static_cast<SVGLength::Unit>(i);
-       }
-       
-       return umap;
-   }
-   
-   UnitCodeLookup const unit_code_lookup = make_unit_code_lookup();
-   
-   
-   
-   typedef INK_UNORDERED_MAP<Glib::ustring, Inkscape::Util::UnitType> TypeMap;
-   
-   /** A std::map that gives the data type value for the string version.
-    * @todo consider hiding map behind hasFoo() and getFoo() type functions. */
-   TypeMap make_type_map()
-   {
-       TypeMap tmap;
-       tmap["DIMENSIONLESS"] = UNIT_TYPE_DIMENSIONLESS;
-       tmap["LINEAR"] = UNIT_TYPE_LINEAR;
-       tmap["RADIAL"] = UNIT_TYPE_RADIAL;
-       tmap["FONT_HEIGHT"] = UNIT_TYPE_FONT_HEIGHT;
-       // Note that code was not yet handling LINEAR_SCALED, TIME, QTY and NONE
-   
-       return tmap;
-   }
-   
-   TypeMap const type_map = make_type_map();
-   
+unsigned const svg_length_lookup[] = {
+    0,
+    UNIT_CODE_PX,
+    UNIT_CODE_PT,
+    UNIT_CODE_PC,
+    UNIT_CODE_MM,
+    UNIT_CODE_CM,
+    UNIT_CODE_IN,
+    UNIT_CODE_FT,
+    UNIT_CODE_MT,
+    UNIT_CODE_EM,
+    UNIT_CODE_EX,
+    UNIT_CODE_PERCENT
+};
+
+
+
+// maps unit codes obtained from their abbreviations to their SVGLength unit indexes
+typedef INK_UNORDERED_MAP<unsigned, SVGLength::Unit> UnitCodeLookup;
+
+UnitCodeLookup make_unit_code_lookup()
+{
+    UnitCodeLookup umap;
+    for (unsigned i = 1; i < G_N_ELEMENTS(svg_length_lookup); ++i) {
+        umap[svg_length_lookup[i]] = static_cast<SVGLength::Unit>(i);
+    }
+    return umap;
+}
+
+UnitCodeLookup const unit_code_lookup = make_unit_code_lookup();
+
+
+
+typedef INK_UNORDERED_MAP<Glib::ustring, Inkscape::Util::UnitType> TypeMap;
+
+/** A std::map that gives the data type value for the string version.
+ * @todo consider hiding map behind hasFoo() and getFoo() type functions. */
+TypeMap make_type_map()
+{
+    TypeMap tmap;
+    tmap["DIMENSIONLESS"] = UNIT_TYPE_DIMENSIONLESS;
+    tmap["LINEAR"] = UNIT_TYPE_LINEAR;
+    tmap["RADIAL"] = UNIT_TYPE_RADIAL;
+    tmap["FONT_HEIGHT"] = UNIT_TYPE_FONT_HEIGHT;
+    // Note that code was not yet handling LINEAR_SCALED, TIME, QTY and NONE
+
+    return tmap;
+}
+
+TypeMap const type_map = make_type_map();
+
 } // namespace
 
 namespace Inkscape {
@@ -130,23 +125,23 @@ namespace Util {
 
 class UnitParser : public Glib::Markup::Parser
 {
-   public:
-      typedef Glib::Markup::Parser::AttributeMap AttrMap;
-      typedef Glib::Markup::ParseContext Ctx;
-   
-      UnitParser(UnitTable *table);
-      ~UnitParser() override = default;
+public:
+    typedef Glib::Markup::Parser::AttributeMap AttrMap;
+    typedef Glib::Markup::ParseContext Ctx;
 
-   protected:
-      void on_start_element(Ctx &ctx, Glib::ustring const &name, AttrMap const &attrs) override;
-      void on_end_element(Ctx &ctx, Glib::ustring const &name) override;
-      void on_text(Ctx &ctx, Glib::ustring const &text) override;
+    UnitParser(UnitTable *table);
+    ~UnitParser() override = default;
 
-   public:
-      UnitTable *tbl;
-      bool primary;
-      bool skip;
-      Unit unit;
+protected:
+    void on_start_element(Ctx &ctx, Glib::ustring const &name, AttrMap const &attrs) override;
+    void on_end_element(Ctx &ctx, Glib::ustring const &name) override;
+    void on_text(Ctx &ctx, Glib::ustring const &text) override;
+
+public:
+    UnitTable *tbl;
+    bool primary;
+    bool skip;
+    Unit unit;
 };
 
 UnitParser::UnitParser(UnitTable *table) :
@@ -215,7 +210,6 @@ bool Unit::compatibleWith(Unit const *u) const
     // Different, incompatible types
     return false;
 }
-
 bool Unit::compatibleWith(Glib::ustring const &u) const
 {
     return compatibleWith(unit_table.getUnit(u));
@@ -253,12 +247,10 @@ double Unit::convert(double from_dist, Unit const *to) const
     // Compatible units
     return from_dist * factor / to->factor;
 }
-
 double Unit::convert(double from_dist, Glib::ustring const &to) const
 {
     return convert(from_dist, unit_table.getUnit(to));
-}
- 
+} 
 double Unit::convert(double from_dist, char const *to) const
 {
     return convert(from_dist, unit_table.getUnit(to));
@@ -304,7 +296,6 @@ Unit const *UnitTable::getUnit(Glib::ustring const &unit_abbr) const
 {
     return getUnit(unit_abbr.c_str());
 }
-
 Unit const *UnitTable::getUnit(SVGLength::Unit u) const
 {
     if (u == 0 || u > SVGLength::LAST_UNIT) {
@@ -416,12 +407,10 @@ bool UnitTable::load(std::string const &filename) {
         Glib::ustring unitfile = Glib::file_get_contents(filename);
         ctx.parse(unitfile);
         ctx.end_parse();
-    } 
-    catch (Glib::FileError const &e) {
+    } catch (Glib::FileError const &e) {
         g_warning("Units file %s is missing: %s\n", filename.c_str(), e.what().c_str());
         return false;
-    } 
-    catch (Glib::MarkupError const &e) {
+    } catch (Glib::MarkupError const &e) {
         g_warning("Problem loading units file '%s': %s\n", filename.c_str(), e.what().c_str());
         return false;
     }
@@ -468,18 +457,14 @@ void UnitParser::on_text(Ctx &ctx, Glib::ustring const &text)
     Glib::ustring element = ctx.get_element();
     if (element == "name") {
         unit.name = text;
-    } 
-    else if (element == "plural") {
+    } else if (element == "plural") {
         unit.name_plural = text;
-    } 
-    else if (element == "abbr") {
+    } else if (element == "abbr") {
         unit.abbr = text;
-    } 
-    else if (element == "factor") {
+    } else if (element == "factor") {
         // TODO make sure we use the right conversion
         unit.factor = g_ascii_strtod(text.c_str(), nullptr);
-    } 
-    else if (element == "description") {
+    } else if (element == "description") {
         unit.description = text;
     }
 }
@@ -491,36 +476,30 @@ void UnitParser::on_end_element(Ctx &/*ctx*/, Glib::ustring const &name)
     }
 }
 
-//compartmentalizing comment
 Quantity::Quantity(double q, Unit const *u)
   : unit(u)
   , quantity(q)
 {
 }
-
 Quantity::Quantity(double q, Glib::ustring const &u)
   : unit(unit_table.getUnit(u.c_str()))
   , quantity(q)
 {
 }
-
 Quantity::Quantity(double q, char const *u)
   : unit(unit_table.getUnit(u))
   , quantity(q)
 {
 }
 
-//compartmentalizing comment
 bool Quantity::compatibleWith(Unit const *u) const
 {
     return unit->compatibleWith(u);
 }
-
 bool Quantity::compatibleWith(Glib::ustring const &u) const
 {
     return compatibleWith(u.c_str());
 }
-
 bool Quantity::compatibleWith(char const *u) const
 {
     return compatibleWith(unit_table.getUnit(u));
@@ -530,51 +509,41 @@ double Quantity::value(Unit const *u) const
 {
     return convert(quantity, unit, u);
 }
-
 double Quantity::value(Glib::ustring const &u) const
 {
     return value(u.c_str());
 }
-
 double Quantity::value(char const *u) const
 {
     return value(unit_table.getUnit(u));
 }
 
-//compartmentalizing comment
 Glib::ustring Quantity::string(Unit const *u) const {
     return Glib::ustring::format(std::fixed, std::setprecision(2), value(u)) + " " + u->abbr;
 }
-
 Glib::ustring Quantity::string(Glib::ustring const &u) const {
     return string(unit_table.getUnit(u.c_str()));
 }
-
 Glib::ustring Quantity::string() const {
     return string(unit);
 }
 
-//compartmentalizing comment
 double Quantity::convert(double from_dist, Unit const *from, Unit const *to)
 {
     return from->convert(from_dist, to);
 }
-
 double Quantity::convert(double from_dist, Glib::ustring const &from, Unit const *to)
 {
     return convert(from_dist, unit_table.getUnit(from.c_str()), to);
 }
-
 double Quantity::convert(double from_dist, Unit const *from, Glib::ustring const &to)
 {
     return convert(from_dist, from, unit_table.getUnit(to.c_str()));
 }
-
 double Quantity::convert(double from_dist, Glib::ustring const &from, Glib::ustring const &to)
 {
     return convert(from_dist, unit_table.getUnit(from.c_str()), unit_table.getUnit(to.c_str()));
 }
-
 double Quantity::convert(double from_dist, char const *from, char const *to)
 {
     return convert(from_dist, unit_table.getUnit(from), unit_table.getUnit(to));
@@ -588,7 +557,6 @@ bool Quantity::operator<(Quantity const &rhs) const
     }
     return quantity < rhs.value(unit);
 }
-
 bool Quantity::operator==(Quantity const &other) const
 {
     /** \fixme  This is overly strict. I think we should change this to:

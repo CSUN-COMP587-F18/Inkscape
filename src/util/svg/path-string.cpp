@@ -52,45 +52,36 @@ void Inkscape::SVG::PathString::_appendOp(char abs_op, char rel_op) {
             break;
         case PATHSTRING_OPTIMIZE:
             {
-				unsigned int const abs_added_size = abs_op_repeated ? 0 : 2;
-				unsigned int const rel_added_size = rel_op_repeated ? 0 : 2;
-				
-				if ( _rel_state.str.size()+2 < _abs_state.str.size()+abs_added_size ) {
+            unsigned int const abs_added_size = abs_op_repeated ? 0 : 2;
+            unsigned int const rel_added_size = rel_op_repeated ? 0 : 2;
+            if ( _rel_state.str.size()+2 < _abs_state.str.size()+abs_added_size ) {
 
-					// Store common prefix
-					commonbase += _rel_state.str;
-					_rel_state.str.clear();
-					// Copy rel to abs
-					_abs_state = _rel_state;
-					_abs_state.switches++;
-					abs_op_repeated = false;
-					// We do not have to copy abs to rel:
-					//   _rel_state.str.size()+2 < _abs_state.str.size()+abs_added_size
-					//   _rel_state.str.size()+rel_added_size < _abs_state.str.size()+2
-					//   _abs_state.str.size()+2 > _rel_state.str.size()+rel_added_size
-				} 
-				
-				else if ( _abs_state.str.size()+2 < _rel_state.str.size()+rel_added_size ) {
+                // Store common prefix
+                commonbase += _rel_state.str;
+                _rel_state.str.clear();
+                // Copy rel to abs
+                _abs_state = _rel_state;
+                _abs_state.switches++;
+                abs_op_repeated = false;
+                // We do not have to copy abs to rel:
+                //   _rel_state.str.size()+2 < _abs_state.str.size()+abs_added_size
+                //   _rel_state.str.size()+rel_added_size < _abs_state.str.size()+2
+                //   _abs_state.str.size()+2 > _rel_state.str.size()+rel_added_size
+            } else if ( _abs_state.str.size()+2 < _rel_state.str.size()+rel_added_size ) {
 
-					// Store common prefix
-					commonbase += _abs_state.str;
-					_abs_state.str.clear();
-					
-					// Copy abs to rel
-					_rel_state = _abs_state;
-					_abs_state.switches++;
-					rel_op_repeated = false;
-				}
-            
-				if ( !abs_op_repeated ) 
-				_abs_state.appendOp(abs_op);
-            
-				if ( !rel_op_repeated ) 
-				_rel_state.appendOp(rel_op);
+                // Store common prefix
+                commonbase += _abs_state.str;
+                _abs_state.str.clear();
+                // Copy abs to rel
+                _rel_state = _abs_state;
+                _abs_state.switches++;
+                rel_op_repeated = false;
+            }
+            if ( !abs_op_repeated ) _abs_state.appendOp(abs_op);
+            if ( !rel_op_repeated ) _rel_state.appendOp(rel_op);
             }
             break;
-        
-		default:
+        default:
             std::cout << "Better not be here!" << std::endl;
     }
 }
@@ -126,33 +117,24 @@ void Inkscape::SVG::PathString::State::append(Geom::Point p, Geom::Point &rp) {
 
 // NOTE: This assumes v and r are already rounded (this includes flushing to zero if they are < 10^minexp)
 void Inkscape::SVG::PathString::State::appendRelativeCoord(Geom::Coord v, Geom::Coord r) {
-    
-	int const minexp = minimumexponent-numericprecision+1;
-    
-	// Position just beyond the last significant digit of the smallest (in absolute sense) number
-	int const digitsEnd = (int)floor(log10(std::min(fabs(v),fabs(r)))) - numericprecision; 
-    
-	double const roundeddiff = floor((v-r)*pow(10.,-digitsEnd-1)+.5);
-    // Number of digits in roundeddiff
-	int const numDigits = (int)floor(log10(fabs(roundeddiff)))+1; 
-    
-	if (r == 0) {
+    int const minexp = minimumexponent-numericprecision+1;
+    int const digitsEnd = (int)floor(log10(std::min(fabs(v),fabs(r)))) - numericprecision; // Position just beyond the last significant digit of the smallest (in absolute sense) number
+    double const roundeddiff = floor((v-r)*pow(10.,-digitsEnd-1)+.5);
+    int const numDigits = (int)floor(log10(fabs(roundeddiff)))+1; // Number of digits in roundeddiff
+    if (r == 0) {
         appendNumber(v, numericprecision, minexp);
-    } 
-	else if (v == 0) {
+    } else if (v == 0) {
         appendNumber(-r, numericprecision, minexp);
-    } 
-	else if (numDigits>0) {
+    } else if (numDigits>0) {
         appendNumber(v-r, numDigits, minexp);
-    } 
-	else {
+    } else {
         // This assumes the input numbers are already rounded to 'precision' digits
         str += '0';
     }
 }
 
 void Inkscape::SVG::PathString::State::appendRelative(Geom::Point p, Geom::Point r) {
-	str += ' ';
+    str += ' ';
     appendRelativeCoord(p[Geom::X], r[Geom::X]);
     str += ',';
     appendRelativeCoord(p[Geom::Y], r[Geom::Y]);
@@ -164,29 +146,19 @@ void Inkscape::SVG::PathString::State::appendRelative(Geom::Coord v, Geom::Coord
 }
 
 void Inkscape::SVG::PathString::State::appendNumber(double v, int precision, int minexp) {
-    // Just large enough to hold the maximum number of digits plus a sign, a period, the letter 'e', another sign and three digits for the exponent
-	size_t const reserve = precision+1+1+1+1+3; 
+    size_t const reserve = precision+1+1+1+1+3; // Just large enough to hold the maximum number of digits plus a sign, a period, the letter 'e', another sign and three digits for the exponent
     size_t const oldsize = str.size();
-	
-	str.append(reserve, (char)0);
-    
-	// Slightly evil, I know (but std::string should be storing its data in one big block of memory, so...)
-	char* begin_of_num = const_cast<char*>(str.data()+oldsize);
-	
+    str.append(reserve, (char)0);
+    char* begin_of_num = const_cast<char*>(str.data()+oldsize); // Slightly evil, I know (but std::string should be storing its data in one big block of memory, so...)
     size_t added = sp_svg_number_write_de(begin_of_num, reserve, v, precision, minexp);
-    
-	// remove any trailing characters
-	str.resize(oldsize+added);
+    str.resize(oldsize+added); // remove any trailing characters
 }
 
 void Inkscape::SVG::PathString::State::appendNumber(double v, double &rv, int precision, int minexp) {
     size_t const oldsize = str.size();
     appendNumber(v, precision, minexp);
-    
-	// Slightly evil, I know (but std::string should be storing its data in one big block of memory, so...)
-	char* begin_of_num = const_cast<char*>(str.data()+oldsize);
-    
-	sp_svg_number_read_d(begin_of_num, &rv);
+    char* begin_of_num = const_cast<char*>(str.data()+oldsize); // Slightly evil, I know (but std::string should be storing its data in one big block of memory, so...)
+    sp_svg_number_read_d(begin_of_num, &rv);
 }
 
 /*

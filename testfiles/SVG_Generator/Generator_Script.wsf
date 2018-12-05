@@ -1,0 +1,6 @@
+<job id="generate">
+  <script language="JScript" src="chance.min.js"/>
+  <script language="JScript" src="SVG_Generator.js"/>
+  <script language="JScript">
+  </script>
+</job>

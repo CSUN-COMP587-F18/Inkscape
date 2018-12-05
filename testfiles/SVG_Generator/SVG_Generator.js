@@ -1,9 +1,10 @@
+//By Francisco Presencia Fandos
 //imported from https://jsfiddle.net/franciscop/819Lr84a/
 //requires chance generator from https://chancejs.com/
 
 
 // Generate a svg randomly
-Chance.mixin({
+chance.mixin({
     svg: function(options){
         options = options || {};
         options.size = options.max_size || 30;

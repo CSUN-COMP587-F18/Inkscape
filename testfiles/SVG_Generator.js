@@ -1,3 +1,4 @@
+//By Francisco Presencia Fandos
 //imported from https://jsfiddle.net/franciscop/819Lr84a/
 //requires chance generator from https://chancejs.com/
 

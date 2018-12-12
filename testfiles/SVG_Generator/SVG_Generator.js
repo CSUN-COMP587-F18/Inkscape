@@ -1,9 +1,15 @@
 //By Francisco Presencia Fandos
 //imported from https://jsfiddle.net/franciscop/819Lr84a/
 //requires chance generator from https://chancejs.com/
+//requires node.js and npm
 
+//Unable to run because this is based on a web-based 
+//there needs to be an alteration on the svg generation script
 
 // Generate a svg randomly
+
+var chance = require('chance').Chance();
+
 chance.mixin({
     svg: function(options){
         options = options || {};
